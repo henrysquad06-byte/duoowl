@@ -1,17 +1,93 @@
-<!-- The Duolingo Owl Image -->
-<img id="duo-owl" src="https://duolingo.com" alt="Duolingo Owl" style="width: 150px; position: relative;" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flying Duolingo Owl</title>
+  <style>
+    body {
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-<script>
-  const owl = document.getElementById("duo-owl");
+    /* CSS Duolingo Owl MOC */
+    .owl {
+      width: 120px;
+      height: 130px;
+      background: #58cc02;
+      border-radius: 50% 50% 40% 40%;
+      position: relative;
+    }
 
-  // Fly up by 100 pixels, then return to original position (0 pixels)
-  owl.animate([
-    { transform: 'translateY(0px)' },   // Start position
-    { transform: 'translateY(-100px)' }, // Fly up
-    { transform: 'translateY(0px)' }    // Land back down
-  ], {
-    duration: 1000, // Total animation time in milliseconds (1 second)
-    easing: 'ease-in-out', // Smooth start and stop
-    iterations: 1 // Play once (change to Infinity to loop)
-  });
-</script>
+    /* Big Eyes */
+    .owl::before, .owl::after {
+      content: '';
+      position: absolute;
+      top: 25px;
+      width: 45px;
+      height: 45px;
+      background: white;
+      border-radius: 50%;
+    }
+    .owl::before { left: 12px; }
+    .owl::after { right: 12px; }
+
+    /* Pupils and Beak */
+    .owl-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+    .owl-face::before, .owl-face::after {
+      content: '';
+      position: absolute;
+      top: 38px;
+      width: 14px;
+      height: 14px;
+      background: #4b4b4b;
+      border-radius: 50%;
+    }
+    .owl-face::before { left: 28px; }
+    .owl-face::after { right: 28px; }
+
+    .beak {
+      position: absolute;
+      top: 55px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 15px solid #ff9600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Built Owl -->
+  <div id="duo-owl" class="owl">
+    <div class="owl-face">
+      <div class="beak"></div>
+    </div>
+  </div>
+
+  <script>
+    const owl = document.getElementById("duo-owl");
+
+    // Animation trigger
+    owl.animate([
+      { transform: 'translateY(0px)' },   
+      { transform: 'translateY(-150px)' }, 
+      { transform: 'translateY(0px)' }    
+    ], {
+      duration: 1200, 
+      easing: 'ease-in-out', 
+      iterations: Infinity // This makes it fly up and down forever
+    });
+  </script>
+
+</body>
+</html>
