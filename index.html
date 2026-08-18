@@ -3,30 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duo Notifications Dashboard</title>
+    <title>Duo Streak Watcher</title>
     <style>
         :root {
             --duo-green: #58cc02;
             --duo-green-dark: #46a302;
-            --duo-owl-green: #78c800;
             --bg-dark: #131f24;
             --card-dark: #202f36;
             --text-main: #f1f7fb;
             --text-sub: #afbbca;
             --border-color: #37464f;
-            --orange-alert: #ff9600;
+            --fire-orange: #ff9600;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            font-family: "Macan", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,231 +28,234 @@
             padding: 20px;
         }
 
-        .dashboard {
+        .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 450px;
             background: var(--card-dark);
             border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
         }
 
-        /* Header Elements */
-        .header {
+        /* Top Bar Setup */
+        .tracker-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--border-color);
+            align-items: center;
+            margin-bottom: 25px;
         }
-
-        .header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .streak-counter {
+        .user-badge { font-weight: 700; color: var(--text-sub); font-size: 0.95rem; }
+        
+        .streak-display {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: rgba(255, 150, 0, 0.15);
-            color: var(--orange-alert);
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
+            color: var(--fire-orange);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.1rem;
             border: 1px solid rgba(255, 150, 0, 0.3);
         }
 
-        /* Notification Feed */
-        .notification-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        /* Responsive Asset Image for the Flame */
+        .flame-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
         }
 
-        .notification-card {
-            display: flex;
-            gap: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            position: relative;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            cursor: pointer;
-        }
-
-        .notification-card:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.06);
-            border-color: #526571;
-        }
-
-        /* Status colors for urgency */
-        .notification-card.urgent {
-            border-color: var(--orange-alert);
-        }
-
-        /* Duo Mascot Avatar */
-        .avatar-container {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            background-color: var(--duo-owl-green);
-            border-radius: 12px;
+        /* The Owl Character Container */
+        .owl-stage {
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 0 var(--duo-green-dark);
+            margin: 20px 0;
+        }
+        
+        /* Your customized Duolingo Artwork Image class */
+        .owl-image {
+            max-height: 100%;
+            max-width: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            animation: float 2s ease-in-out infinite; 
         }
 
-        .urgent .avatar {
-            background-color: #ff4b4b;
-            box-shadow: 0 4px 0 #ea2b2b;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background-color: #3b82f6;
-            border-radius: 50%;
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            border: 2px solid var(--card-dark);
-        }
-
-        .urgent .status-dot {
-            background-color: #ff4b4b;
-        }
-
-        /* Content Text */
-        .notif-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding-right: 10px;
-        }
-
-        .notif-title {
-            font-size: 1rem;
+        /* Speech Bubble */
+        .speech-bubble {
+            background: var(--text-main);
+            color: #111;
+            padding: 16px;
+            border-radius: 18px;
             font-weight: 700;
-            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.4;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 6px 0 #d0d7de;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: var(--text-main) transparent;
         }
 
-        .notif-body {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            line-height: 1.35;
+        /* Control UI */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
         }
-
-        .notif-time {
-            font-size: 0.75rem;
-            color: #617582;
+        input {
+            flex: 1;
+            background: #18262c;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+            color: white;
             font-weight: 600;
-            margin-top: 2px;
+            font-size: 0.95rem;
         }
-
-        /* Custom Interactive Button */
-        .action-btn {
-            width: 100%;
-            background-color: var(--duo-green);
+        input:focus { outline: none; border-color: var(--duo-green); }
+        
+        button {
+            background: var(--duo-green);
             color: white;
             border: none;
             border-radius: 14px;
-            padding: 14px;
-            font-size: 1rem;
+            padding: 12px 20px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
             cursor: pointer;
-            margin-top: 20px;
             box-shadow: 0 4px 0 var(--duo-green-dark);
-            transition: filter 0.1s ease, transform 0.1s ease;
         }
+        button:active { transform: translateY(4px); box-shadow: none; }
+        .toggle-mode { color: var(--duo-green); font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline; margin-top: 10px; display: inline-block; }
 
-        .action-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 var(--duo-green-dark);
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard">
-        <div class="header">
-            <h1>Duo Alerts</h1>
-            <div class="streak-counter">
-                <span>🔥</span>
-                <span>0 DAYS</span>
+    <div class="container">
+        <div class="tracker-header">
+            <div class="user-badge" id="usernameDisplay">STREAK MASTER</div>
+            <div class="streak-display">
+                <!-- Using your updated asset link here -->
+                <img src="assets/streak_fire.png" alt="Streak Flame" class="flame-icon">
+                <span id="streakNum">31</span> DAYS
             </div>
         </div>
 
-        <div class="notification-list">
-            <!-- Notification 1 -->
-            <div class="notification-card urgent">
-                <div class="avatar-container">
-                    <div class="avatar">🦉</div>
-                    <div class="status-dot"></div>
-                </div>
-                <div class="notif-content">
-                    <div class="notif-title">Duolingo</div>
-                    <div class="notif-body">These reminders don't seem to be working. We will stop sending them for now.</div>
-                    <div class="notif-time">Just now</div>
-                </div>
-            </div>
+        <div class="speech-bubble" id="duoSpeech">
+            31 DAYS! Look at you riding high! Your commitment pleases the cheered owl. Keep pushing!
+        </div>
 
-            <!-- Notification 2 -->
-            <div class="notification-card">
-                <div class="avatar-container">
-                    <div class="avatar">🦉</div>
-                    <div class="status-dot"></div>
-                </div>
-                <div class="notif-content">
-                    <div class="notif-title">Duolingo</div>
-                    <div class="notif-body">Spanish won't learn itself. Unless you want Duo to visit your house tonight?</div>
-                    <div class="notif-time">42 minutes ago</div>
-                </div>
-            </div>
+        <div class="owl-stage">
+            <img src="assets/duolingo.png" alt="Cheered Duo Owl" class="owl-image" id="owlMascot">
+        </div>
 
-            <!-- Notification 3 -->
-            <div class="notification-card">
-                <div class="avatar-container">
-                    <div class="avatar">🦉</div>
-                    <div class="status-dot"></div>
-                </div>
-                <div class="notif-content">
-                    <div class="notif-title">Duolingo</div>
-                    <div class="notif-body">Your streak is freezing... cold... like your commitment to your future.</div>
-                    <div class="notif-time">2 hours ago</div>
-                </div>
-            </div>
-
-            <!-- Notification 4 -->
-            <div class="notification-card">
-                <div class="avatar-container">
-                    <div class="avatar">🦉</div>
-                    <div class="status-dot"></div>
-                </div>
-                <div class="notif-content">
-                    <div class="notif-title">Duolingo</div>
-                    <div class="notif-body">It's time for your daily 5-minute lesson. Don't make the owl cry again.</div>
-                    <div class="notif-time">Yesterday</div>
-                </div>
+        <!-- Sync Mode View -->
+        <div id="apiMode">
+            <div class="input-group">
+                <input type="text" id="duoUsername" placeholder="Duolingo Username">
+                <button onclick="fetchStreak()">Sync Live</button>
             </div>
         </div>
 
-        <button class="action-btn" onclick="alert('Duo is watching. Open the app immediately.')">Extend Your Streak</button>
+        <!-- Backup Manual Override Mode -->
+        <div id="manualMode" style="display: none;">
+            <div class="input-group">
+                <input type="number" id="manualStreak" placeholder="Enter Streak Manually" min="0" value="31">
+                <button onclick="setManualStreak()">Update</button>
+            </div>
+        </div>
+
+        <span class="toggle-mode" onclick="toggleMode()" id="modeLink">Switch to Manual Override</span>
     </div>
 
+    <script>
+        let currentMode = 'api';
+
+        function toggleMode() {
+            const apiDiv = document.getElementById('apiMode');
+            const manualDiv = document.getElementById('manualMode');
+            const link = document.getElementById('modeLink');
+            
+            if (currentMode === 'api') {
+                apiDiv.style.display = 'none';
+                manualDiv.style.display = 'block';
+                link.innerText = "Switch to Live API Sync";
+                currentMode = 'manual';
+            } else {
+                apiDiv.style.display = 'block';
+                manualDiv.style.display = 'none';
+                link.innerText = "Switch to Manual Override";
+                currentMode = 'api';
+            }
+        }
+
+        async function fetchStreak() {
+            const username = document.getElementById('duoUsername').value.trim();
+            if (!username) return alert("Please type your username first!");
+            
+            document.getElementById('duoSpeech').innerText = "Reaching into the Duolingo servers...";
+            
+            try {
+                const url = `https://corsproxy.io{username}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data && data.users && data.users.length > 0) {
+                    const user = data.users;
+                    const activeStreak = user.streak || 0;
+                    
+                    document.getElementById('usernameDisplay').innerText = user.name.toUpperCase();
+                    updateDuoDialogue(activeStreak);
+                } else {
+                    document.getElementById('duoSpeech').innerText = "I couldn't locate that user profile. Double-check spelling or try Manual Mode.";
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('duoSpeech').innerText = "GitHub's network proxy blocked the direct sync. Please click 'Manual Override' below to use the simulator!";
+            }
+        }
+
+        function setManualStreak() {
+            const val = parseInt(document.getElementById('manualStreak').value);
+            if (isNaN(val) || val < 0) return alert("Enter a realistic number!");
+            document.getElementById('usernameDisplay').innerText = "SIMULATOR USER";
+            updateDuoDialogue(val);
+        }
+
+        function updateDuoDialogue(streak) {
+            document.getElementById('streakNum').innerText = streak;
+            const speech = document.getElementById('duoSpeech');
+
+            if (streak === 0) {
+                speech.innerText = "0 days? Zero?! Even my cheered expression cannot hide my deep disappointment. Go open the app.";
+            } else if (streak > 0 && streak <= 10) {
+                speech.innerText = `${streak} day(s) active. You have a long way to go, but you are making me proud.`;
+            } else if (streak > 10 && streak <= 50) {
+                speech.innerText = `${streak} DAYS! Look at you riding high! Your commitment completely cheers me up!`;
+            } else {
+                speech.innerText = `${streak} DAYS?! Absolute excellence. You are the ultimate language champion.`;
+            }
+        }
+    </script>
 </body>
 </html>
