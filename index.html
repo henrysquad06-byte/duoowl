@@ -1,0 +1,17 @@
+<!-- The Duolingo Owl Image -->
+<img id="duo-owl" src="https://duolingo.com" alt="Duolingo Owl" style="width: 150px; position: relative;" />
+
+<script>
+  const owl = document.getElementById("duo-owl");
+
+  // Fly up by 100 pixels, then return to original position (0 pixels)
+  owl.animate([
+    { transform: 'translateY(0px)' },   // Start position
+    { transform: 'translateY(-100px)' }, // Fly up
+    { transform: 'translateY(0px)' }    // Land back down
+  ], {
+    duration: 1000, // Total animation time in milliseconds (1 second)
+    easing: 'ease-in-out', // Smooth start and stop
+    iterations: 1 // Play once (change to Infinity to loop)
+  });
+</script>
